@@ -2,17 +2,30 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyController : MonoBehaviour
+public class EnemyController : TankController
 {
-    // Start is called before the first frame update
-    void Start()
+    [field: SerializeField] public EnemyResourceHolder ResourceHolder { get; protected set; }
+    public delegate void OnEnemyDie(EnemyResourceHolder resourceHolder);
+    public OnEnemyDie onEnemyDie;
+
+    private void Start()
     {
-        
+        hPController.ResetStat();
     }
 
-    // Update is called once per frame
-    void Update()
+    protected override void Die()
     {
-        
+        base.Die();
+        if (onEnemyDie != null)
+        {
+            onEnemyDie(ResourceHolder);
+        }
     }
+}
+
+[System.Serializable]
+public class EnemyResourceHolder
+{
+    public int coins;
+    public float exp;
 }
