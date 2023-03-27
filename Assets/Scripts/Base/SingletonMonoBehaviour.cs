@@ -5,24 +5,32 @@ using UnityEngine;
 public class SingletonMonoBehaviour<T> : MonoBehaviour where T : MonoBehaviour
 {
     private static T _instance;
-    public static T Instance => _instance;
-
-    protected virtual void Awake()
+    public static T Instance
     {
-        if (_instance != null && _instance != this)
+        get
         {
-            Destroy(gameObject);
-        }
-        else
-        {
-            if (this != null)
+            if (_instance == null)
             {
-                _instance = this as T;
+                foreach (var t in FindObjectsOfType<T>())
+                {
+                    if (t != null)
+                    {
+                        _instance = t;
+                        continue;
+                    }
+                    else
+                    {
+                        Destroy(t.gameObject);
+                    }
+                    Destroy(t.gameObject);
+                }
             }
-            else
-            {
-                _instance = new GameObject(this.name).GetComponent<T>();
-            }
+
+            if (_instance == null) _instance = new GameObject($"{typeof(T).ToString()}_SingletonMonoBehaviour").GetComponent<T>();
+
+            return _instance;
         }
     }
+
+    protected virtual void Awake() { }
 }
