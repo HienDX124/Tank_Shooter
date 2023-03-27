@@ -20,6 +20,8 @@ public class EnemyController : TankController
         {
             onEnemyDie(ResourceHolder);
         }
+
+        Observer.Instance.PostEvent(EventID.EnemyDie, this);
     }
 }
 

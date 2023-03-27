@@ -7,17 +7,21 @@ public class PlayerController : TankController
     private Vector2 cachedVector2;
     [SerializeField] private ExpController expController;
     [SerializeField] private float testExpRequire;
+    private bool isMovingRightMouseClickPos;
+    private Vector2 rightMouseClickPosWorldSpace;
 
     protected override void OnEnable()
     {
         base.OnEnable();
         expController.onLevelUp += LevelUp;
+        Observer.Instance.RegistListener(EventID.EnemyDie, HandleEventEnemyDie);
     }
 
     protected override void OnDisable()
     {
         base.OnDisable();
         expController.onLevelUp -= LevelUp;
+        Observer.Instance.RemoveListenner(EventID.EnemyDie, HandleEventEnemyDie);
     }
 
     private void Start()
@@ -53,13 +57,23 @@ public class PlayerController : TankController
         MoveToRightMouseClickPos();
     }
 
+    private void HandleEventEnemyDie(object param = null)
+    {
+        EnemyController enemyController = (EnemyController)param;
+        if (enemyController == null)
+        {
+            Debug.LogWarning("There's no enemyController component");
+            return;
+        }
+
+        IncreaseExp(enemyController.ResourceHolder.exp);
+    }
+
     private Vector2 GetGunRotateDirection(Vector2 mouseScreenPos)
     {
         return Camera.main.ScreenToWorldPoint(mouseScreenPos) - gunBarrelTransform.position;
     }
 
-    private bool isMovingRightMouseClickPos;
-    private Vector2 rightMouseClickPosWorldSpace;
     private void MoveToRightMouseClickPos()
     {
         if (!isMovingRightMouseClickPos) return;

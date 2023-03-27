@@ -10,15 +10,6 @@ public class LevelController : MonoBehaviour
     private void Start()
     {
         enemyControllers = FindObjectsOfType<EnemyController>();
-        foreach (var e in enemyControllers)
-        {
-            e.onEnemyDie += HandleEnemyDie;
-        }
         playerController = FindObjectOfType<PlayerController>();
-    }
-
-    private void HandleEnemyDie(EnemyResourceHolder resourceHolder)
-    {
-        playerController.IncreaseExp(resourceHolder.exp);
     }
 }

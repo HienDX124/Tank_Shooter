@@ -11,7 +11,6 @@ public class HPController : StatBaseController
     public void TakeDamage(float damage)
     {
         ChangeStat(-damage);
-        Debug.Log($"{this.name} take damage: {damage}, current hp: {currentHP}");
         if (currentHP <= 0) ZeroHP();
     }
 
