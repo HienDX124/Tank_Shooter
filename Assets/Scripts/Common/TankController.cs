@@ -33,7 +33,7 @@ public class TankController : MovementController, IHit
     protected override void MoveToPosition(Vector3 target)
     {
         base.MoveToPosition(target);
-        bodyTransform.up = Vector3.Lerp(bodyTransform.up, target, 0.02f);
+        bodyTransform.up = Vector3.Lerp(bodyTransform.up, (transform.position - target), 0.02f);
     }
 
     protected virtual void RotateGunBarrel(Vector3 direction)
